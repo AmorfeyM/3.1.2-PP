@@ -33,7 +33,7 @@
                 <td th:text="${user.username}">Email</td>
 
                 <td th:text="${user.getRoleList().get(0).getName()}">Role</td>
-                <td th:if="${user.getRoleList().size()} > 1" th:text="${user.getRoleList().get(1).getName()}">Role</td>
+                <td> <th:block th:if="${user.getRoleList().size()} > 1" th:text="${user.getRoleList().get(1).getName()}">Role</th:block></td>
 
                 <td>
                     <form th:action="@{/admin/update/{id}(id=${user.getId()})}" th:method="GET">
