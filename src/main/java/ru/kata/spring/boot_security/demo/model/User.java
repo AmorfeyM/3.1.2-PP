@@ -2,15 +2,15 @@ package ru.kata.spring.boot_security.demo.model;
 
 import lombok.Data;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -38,13 +38,15 @@ public class User implements UserDetails {
    @Column(name = "password")
    private String password;
 
-   @ManyToMany(fetch = FetchType.EAGER)
+   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
    @JoinTable(
            name = "users_roles",
            joinColumns = @JoinColumn(name = "user_id"),
            inverseJoinColumns = @JoinColumn(name = "role_id")
+
    )
-   private List<Role> roleList = new ArrayList<>();
+   @Fetch(FetchMode.JOIN)
+   private Set<Role> roleSet = new HashSet<>();
 
    public User() {
    }
@@ -52,10 +54,10 @@ public class User implements UserDetails {
       this.username = username;
       this.password = password;
    }
-
+   @Transactional
    @Override
    public Collection<? extends GrantedAuthority> getAuthorities() {
-      return getRoles().stream()
+      return roleSet.stream()
               .map(role -> new SimpleGrantedAuthority(role.getName()))
               .collect(Collectors.toList());
    }
@@ -82,11 +84,11 @@ public class User implements UserDetails {
    }
 
    public void addRole(Role role) {
-      roleList.add(role);
+      roleSet.add(role);
    }
-
-   public List<Role> getRoles() {
-      return roleList;
+   @Transactional
+   public Set<Role> getRoles() {
+      return roleSet;
    }
 
    @Override
@@ -109,7 +111,7 @@ public class User implements UserDetails {
               ", firstName='" + firstName + '\'' +
               ", lastName='" + lastName + '\'' +
               ", email='" + email + '\'' +
-              ", roleList=" + roleList +
+              ", roleList=" + roleSet +
               '}';
    }
 }

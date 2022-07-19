@@ -3,20 +3,20 @@ package ru.kata.spring.boot_security.demo;
 import org.springframework.stereotype.Component;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.repository.RoleRepository;
-import ru.kata.spring.boot_security.demo.repository.UserRepository;
+import ru.kata.spring.boot_security.demo.service.RoleService;
+import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.annotation.PostConstruct;
 
 @Component
 public class InitUsersAndRoles {
 
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final UserService userService;
+    private final RoleService roleService;
 
-    public InitUsersAndRoles(UserRepository userRepository, RoleRepository roleRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+    public InitUsersAndRoles(UserService userService, RoleService roleService) {
+        this.userService = userService;
+        this.roleService = roleService;
     }
 
     @PostConstruct
@@ -24,17 +24,17 @@ public class InitUsersAndRoles {
         Role user = new Role("ROLE_USER");
         Role admin = new Role("ROLE_ADMIN");
 
-        roleRepository.save(user);
-        roleRepository.save(admin);
+        roleService.save(user);
+        roleService.save(admin);
 
-        User user1 = new User("Amorfeym", "$2a$12$54rDWKSismZ9uGff8bWwvetMn/YqhjzHl0P3D7JxY8GSyXeI2zM9e");//111
-        User user2 = new User("Morty","$2a$12$54rDWKSismZ9uGff8bWwvetMn/YqhjzHl0P3D7JxY8GSyXeI2zM9e");//111
-        User user3 = new User("Gena", "$2a$12$54rDWKSismZ9uGff8bWwvetMn/YqhjzHl0P3D7JxY8GSyXeI2zM9e");//111
+        User user1 = new User("Amorfeym", "111");//$2a$12$54rDWKSismZ9uGff8bWwvetMn/YqhjzHl0P3D7JxY8GSyXeI2zM9e
+        User user2 = new User("Morty","111");//111//$2a$12$54rDWKSismZ9uGff8bWwvetMn/YqhjzHl0P3D7JxY8GSyXeI2zM9e
+        User user3 = new User("Gena", "111");//$2a$12$54rDWKSismZ9uGff8bWwvetMn/YqhjzHl0P3D7JxY8GSyXeI2zM9e
 
-        user1.addRole(roleRepository.findByName("ROLE_ADMIN"));
-        user1.addRole(roleRepository.findByName("ROLE_USER"));
-        user2.addRole(roleRepository.findByName("ROLE_ADMIN"));
-        user3.addRole(roleRepository.findByName("ROLE_USER"));
+        user1.addRole(roleService.findByName("ROLE_ADMIN"));
+        user1.addRole(roleService.findByName("ROLE_USER"));
+        user2.addRole(roleService.findByName("ROLE_ADMIN"));
+        user3.addRole(roleService.findByName("ROLE_USER"));
 
         user3.setFirstName("Crocodil");
         user3.setLastName("Aligatorov");
@@ -48,9 +48,9 @@ public class InitUsersAndRoles {
         user2.setLastName("Smite");
         user2.setEmail("morty@mail.ru");
 
-        userRepository.save(user1);
-        userRepository.save(user2);
-        userRepository.save(user3);
+        userService.saveUser(user1);
+        userService.saveUser(user2);
+        userService.saveUser(user3);
 
     }
 }

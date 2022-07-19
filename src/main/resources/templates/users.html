@@ -28,7 +28,7 @@
         <td th:text="${user.lastName}">Last Name</td>
         <td th:text="${user.email}">E-mail</td>
 
-        <td th:each="role : ${user.roleList}" th:text="${role.getName()}">Roles</td>
+        <td th:each="role : ${user.roleSet}" th:text="${role.getName()}">Roles</td>
         <td>
             <form th:action="@{/admin/update/{id}(id=${user.getId()})}" th:method="GET">
                 <input type="submit" value="Edit"/>
