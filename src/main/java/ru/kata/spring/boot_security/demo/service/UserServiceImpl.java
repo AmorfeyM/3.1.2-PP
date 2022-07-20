@@ -49,8 +49,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.findByUsername(username);
     }
 
+    public User findByUsername(String email) {
+        return userRepository.findByUsername(email);
+    }
+
     public User findByEmail(String email) {
-        return  userRepository.findByEmail(email);
+        return userRepository.findByUsername(email);
     }
 
 }

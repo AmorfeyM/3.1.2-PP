@@ -86,10 +86,6 @@ public class User implements UserDetails {
    public void addRole(Role role) {
       roleSet.add(role);
    }
-   @Transactional
-   public Set<Role> getRoles() {
-      return roleSet;
-   }
 
    @Override
    public boolean equals(Object o) {
